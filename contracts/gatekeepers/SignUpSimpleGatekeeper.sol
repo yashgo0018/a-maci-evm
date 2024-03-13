@@ -7,9 +7,15 @@ import {SignUpGatekeeper} from "./SignUpGatekeeper.sol";
 contract SignUpSimpleGatekeeper is SignUpGatekeeper, Ownable {
     address public maci;
 
+    bool private on = true;
+
     mapping(address => bool) public registered;
 
     constructor() Ownable() {}
+
+    function toggle(bool _on) public onlyOwner {
+        on = _on;
+    }
 
     /*
      * Adds an uninitialised MACI instance to allow for token singups
@@ -30,12 +36,13 @@ contract SignUpSimpleGatekeeper is SignUpGatekeeper, Ownable {
         address _user,
         bytes memory
     ) public override returns (bool, uint256) {
+        require(on);
         require(
             maci == msg.sender,
             "SignUpGatekeeper: only specified MACI instance can call this function"
         );
         require(!registered[_user], "SignUpGatekeeper: registered");
         registered[_user] = true;
-        return (true, 1000);
+        return (true, 100);
     }
 }

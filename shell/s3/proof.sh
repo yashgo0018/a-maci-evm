@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# proof.sh msg/tally 0000
+# proof.sh msg/tally/deactivate 0000
 
 cd "$(dirname "$0")"
 cd ../../build

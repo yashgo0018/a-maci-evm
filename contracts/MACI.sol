@@ -113,7 +113,8 @@ contract MACI is DomainObjs, SnarkCommon, Ownable {
     );
 
     modifier atPeriod(Period _p) {
-        require(_p == period, "MACI: period error");
+        // "MACI: period error"
+        require(_p == period, "1");
         _;
     }
 
@@ -215,16 +216,19 @@ contract MACI is DomainObjs, SnarkCommon, Ownable {
         PubKey memory _pubKey,
         bytes memory _data
     ) public atPeriod(Period.Voting) {
-        require(numSignUps < _maxLeavesCount, "full");
+        // "full"
+        require(numSignUps < _maxLeavesCount, "2");
+        // "3"
         require(
             _pubKey.x < SNARK_SCALAR_FIELD && _pubKey.y < SNARK_SCALAR_FIELD,
-            "MACI: _pubKey values should be less than the snark scalar field"
+            "3"
         );
 
         (bool valid, uint256 _balance) = gateKeeper.register(msg.sender, _data);
         _balance;
 
-        require(valid, "401");
+        // "401"
+        require(valid, "4");
 
         uint256 stateLeaf = hash2(
             [
@@ -246,12 +250,13 @@ contract MACI is DomainObjs, SnarkCommon, Ownable {
         Message memory _message,
         PubKey memory _encPubKey
     ) public atPeriod(Period.Voting) {
+        // "MACI: invalid _encPubKey"
         require(
             _encPubKey.x != 0 &&
                 _encPubKey.y != 1 &&
                 _encPubKey.x < SNARK_SCALAR_FIELD &&
                 _encPubKey.y < SNARK_SCALAR_FIELD,
-            "MACI: invalid _encPubKey"
+            "5"
         );
 
         dmsgHashes[dmsgChainLength + 1] = hash2(
@@ -293,10 +298,8 @@ contract MACI is DomainObjs, SnarkCommon, Ownable {
         uint256[5][] memory _newDeactivated,
         uint256[8] memory _proof
     ) public atPeriod(Period.Voting) {
-        require(
-            _processedDMsgCount < dmsgChainLength,
-            "all messages have been processed"
-        );
+        // "all messages have been processed"
+        require(_processedDMsgCount < dmsgChainLength, "6");
 
         uint256 batchSize = parameters.messageBatchSize;
         require(size <= batchSize);
@@ -334,7 +337,8 @@ contract MACI is DomainObjs, SnarkCommon, Ownable {
         );
 
         bool isValid = verifier.verify(_proof, vk, inputHash);
-        require(isValid, "invalid proof");
+        // "invalid proof"
+        require(isValid, "7");
 
         // Proof success, update commitment and progress.
         currentDeactivateCommitment = newDeactivateCommitment;
@@ -350,10 +354,12 @@ contract MACI is DomainObjs, SnarkCommon, Ownable {
         require(!nullifiers[_nullifier]);
         nullifiers[_nullifier] = true;
 
-        require(numSignUps < _maxLeavesCount, "full");
+        // "full"
+        require(numSignUps < _maxLeavesCount, "2");
+        // "MACI: _pubKey values should be less than the snark scalar field"
         require(
             _pubKey.x < SNARK_SCALAR_FIELD && _pubKey.y < SNARK_SCALAR_FIELD,
-            "MACI: _pubKey values should be less than the snark scalar field"
+            "3"
         );
 
         uint256[] memory input = new uint256[](7);
@@ -373,7 +379,8 @@ contract MACI is DomainObjs, SnarkCommon, Ownable {
         );
 
         bool isValid = verifier.verify(_proof, vk, inputHash);
-        require(isValid, "invalid proof");
+        // "invalid proof"
+        require(isValid, "7");
 
         uint256 stateLeaf = hash2(
             [
@@ -395,12 +402,13 @@ contract MACI is DomainObjs, SnarkCommon, Ownable {
         Message memory _message,
         PubKey memory _encPubKey
     ) public atPeriod(Period.Voting) {
+        // "MACI: invalid _encPubKey"
         require(
             _encPubKey.x != 0 &&
                 _encPubKey.y != 1 &&
                 _encPubKey.x < SNARK_SCALAR_FIELD &&
                 _encPubKey.y < SNARK_SCALAR_FIELD,
-            "MACI: invalid _encPubKey"
+            "5"
         );
 
         msgHashes[msgChainLength + 1] = hash2(
@@ -454,10 +462,8 @@ contract MACI is DomainObjs, SnarkCommon, Ownable {
         uint256 newStateCommitment,
         uint256[8] memory _proof
     ) public atPeriod(Period.Processing) {
-        require(
-            _processedMsgCount < msgChainLength,
-            "all messages have been processed"
-        );
+        // "all messages have been processed"
+        require(_processedMsgCount < msgChainLength, "6");
 
         uint256 batchSize = parameters.messageBatchSize;
 
@@ -487,7 +493,8 @@ contract MACI is DomainObjs, SnarkCommon, Ownable {
         );
 
         bool isValid = verifier.verify(_proof, vk, inputHash);
-        require(isValid, "invalid proof");
+        // "invalid proof"
+        require(isValid, "7");
 
         // Proof success, update commitment and progress.
         currentStateCommitment = newStateCommitment;
@@ -506,10 +513,8 @@ contract MACI is DomainObjs, SnarkCommon, Ownable {
         uint256 newTallyCommitment,
         uint256[8] memory _proof
     ) public atPeriod(Period.Tallying) {
-        require(
-            _processedUserCount < numSignUps,
-            "all users have been processed"
-        );
+        // "all users have been processed"
+        require(_processedUserCount < numSignUps, "6");
 
         uint256 batchSize = 5 ** parameters.intStateTreeDepth;
         uint256 batchNum = _processedUserCount / batchSize;
@@ -532,7 +537,8 @@ contract MACI is DomainObjs, SnarkCommon, Ownable {
         );
 
         bool isValid = verifier.verify(_proof, vk, inputHash);
-        require(isValid, "invalid proof");
+        // "invalid proof"
+        require(isValid, "7");
 
         // Proof success, update commitment and progress.
         currentTallyCommitment = newTallyCommitment;
@@ -585,7 +591,7 @@ contract MACI is DomainObjs, SnarkCommon, Ownable {
     }
 
     function _stateUpdateAt(uint256 _index) private {
-        require(_index >= _leafIdx0, "must update from height 0");
+        require(_index >= _leafIdx0);
 
         uint256 idx = _index;
         uint256 height = 0;
@@ -611,7 +617,7 @@ contract MACI is DomainObjs, SnarkCommon, Ownable {
     }
 
     function _dUpdateBetween(uint256 _left, uint256 _right) private {
-        require(_left >= _leafIdx0, "must update from height 0");
+        require(_left >= _leafIdx0);
         require(_right >= _left);
 
         uint256 l = _left;
