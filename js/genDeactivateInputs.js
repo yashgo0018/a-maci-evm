@@ -92,7 +92,11 @@ while (main.processedDMsgCount < logs.dmessages.length) {
       `deactivates_${jsonIdx.toString().padStart(4, "0")}.json`
     ),
     JSON.stringify(
-      stringizing({ deactivates: newDeactivate, size }),
+      stringizing({
+        newDeactivateCommitment: input.newDeactivateCommitment,
+        deactivates: newDeactivate,
+        size,
+      }),
       undefined,
       2
     )

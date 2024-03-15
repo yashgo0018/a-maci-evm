@@ -9,12 +9,18 @@ contract SignUpSimpleGatekeeper is SignUpGatekeeper, Ownable {
 
     bool private on = true;
 
-    mapping(address => bool) public registered;
+    uint256 private max = 3;
+
+    mapping(address => uint256) public registered;
 
     constructor() Ownable() {}
 
     function toggle(bool _on) public onlyOwner {
         on = _on;
+    }
+
+    function set(uint256 _max) public onlyOwner {
+        max = _max;
     }
 
     /*
@@ -41,8 +47,8 @@ contract SignUpSimpleGatekeeper is SignUpGatekeeper, Ownable {
             maci == msg.sender,
             "SignUpGatekeeper: only specified MACI instance can call this function"
         );
-        require(!registered[_user], "SignUpGatekeeper: registered");
-        registered[_user] = true;
+        require(registered[_user] < max, "SignUpGatekeeper: registered");
+        registered[_user]++;
         return (true, 100);
     }
 }

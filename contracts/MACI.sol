@@ -295,7 +295,7 @@ contract MACI is DomainObjs, SnarkCommon, Ownable {
     function processDeactivateMessage(
         uint256 size,
         uint256 newDeactivateCommitment,
-        uint256[5][] memory _newDeactivated,
+        uint256 newDeactivateRoot,
         uint256[8] memory _proof
     ) public atPeriod(Period.Voting) {
         // "all messages have been processed"
@@ -304,14 +304,15 @@ contract MACI is DomainObjs, SnarkCommon, Ownable {
         uint256 batchSize = parameters.messageBatchSize;
         require(size <= batchSize);
 
-        uint256 c = deactivatedCount + _leafIdx0;
-        for (uint256 i = 0; i < _newDeactivated.length; i++) {
-            dnodes[c] = hash5(_newDeactivated[i]);
-            c++;
-        }
-        _dUpdateBetween(deactivatedCount + _leafIdx0, c - 1);
-        deactivatedCount = c - _leafIdx0;
-        // uint256 newDeactivateRoot = dnodes[0];
+        // uint256 c = deactivatedCount + _leafIdx0;
+        // for (uint256 i = 0; i < _newDeactivated.length; i++) {
+        //     dnodes[c] = hash5(_newDeactivated[i]);
+        //     c++;
+        // }
+        // _dUpdateBetween(deactivatedCount + _leafIdx0, c - 1);
+        // deactivatedCount = c - _leafIdx0;
+
+        dnodes[0] = newDeactivateRoot;
 
         uint256[] memory input = new uint256[](7);
         input[0] = dnodes[0]; // newDeactivateRoot
