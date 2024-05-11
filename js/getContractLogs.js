@@ -7,7 +7,7 @@ const { stringizing } = require("./keypair");
 // ETHDencer test
 const contract = "0x0B51C51e9aF970B50E4B2BB1C2eFF6059f6cD549";
 const fromBlock = 5481480;
-const endBlock = 5490642;
+const endBlock = 5511845;
 // const provider = 'https://bscrpc.com'
 // const provider = "https://goerli.infura.io/v3/1d0842dba8df4b07a2a02ab24c44e6be";
 const provider =

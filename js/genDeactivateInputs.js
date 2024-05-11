@@ -57,7 +57,7 @@ const processBatchSize = [];
 
 main.initProcessedDeactivateLog(allDeactivates, activeStates);
 
-let jsonIdx = 1;
+let jsonIdx = 9;
 let i = main.processedDMsgCount;
 // PROCESSING
 while (main.processedDMsgCount < logs.dmessages.length) {
@@ -94,7 +94,7 @@ while (main.processedDMsgCount < logs.dmessages.length) {
     JSON.stringify(
       stringizing({
         newDeactivateCommitment: input.newDeactivateCommitment,
-        deactivates: newDeactivate,
+        newDeactivateRoot: input.newDeactivateRoot,
         size,
       }),
       undefined,

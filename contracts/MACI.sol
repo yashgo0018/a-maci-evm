@@ -617,34 +617,34 @@ contract MACI is DomainObjs, SnarkCommon, Ownable {
         }
     }
 
-    function _dUpdateBetween(uint256 _left, uint256 _right) private {
-        require(_left >= _leafIdx0);
-        require(_right >= _left);
+    // function _dUpdateBetween(uint256 _left, uint256 _right) private {
+    //     require(_left >= _leafIdx0);
+    //     require(_right >= _left);
 
-        uint256 l = _left;
-        uint256 r = _right;
-        uint256 height = 0;
-        while (l > 0) {
-            uint256 zero = _zeros0[height];
+    //     uint256 l = _left;
+    //     uint256 r = _right;
+    //     uint256 height = 0;
+    //     while (l > 0) {
+    //         uint256 zero = _zeros0[height];
 
-            l = (l - 1) / 5;
-            r = (r - 1) / 5;
+    //         l = (l - 1) / 5;
+    //         r = (r - 1) / 5;
 
-            for (uint256 idx = l; idx <= r; idx++) {
-                uint256 childrenIdx0 = idx * 5 + 1;
+    //         for (uint256 idx = l; idx <= r; idx++) {
+    //             uint256 childrenIdx0 = idx * 5 + 1;
 
-                uint256[5] memory inputs;
-                for (uint256 i = 0; i < 5; i++) {
-                    uint256 child = dnodes[childrenIdx0 + i];
-                    if (child == 0) {
-                        child = zero;
-                    }
-                    inputs[i] = child;
-                }
-                dnodes[idx] = hash5(inputs);
-            }
+    //             uint256[5] memory inputs;
+    //             for (uint256 i = 0; i < 5; i++) {
+    //                 uint256 child = dnodes[childrenIdx0 + i];
+    //                 if (child == 0) {
+    //                     child = zero;
+    //                 }
+    //                 inputs[i] = child;
+    //             }
+    //             dnodes[idx] = hash5(inputs);
+    //         }
 
-            height++;
-        }
-    }
+    //         height++;
+    //     }
+    // }
 }
