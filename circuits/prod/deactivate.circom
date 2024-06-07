@@ -9,4 +9,4 @@ component main {
   public [
     inputHash
   ]
-} = ProcessDeactivateMessages(6, 25);
+} = ProcessDeactivateMessages(2, 5);

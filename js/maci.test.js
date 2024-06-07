@@ -1,18 +1,18 @@
-const fs = require('fs')
-const path = require('path')
-const { stringizing, genKeypair } = require('./keypair')
-const MACI = require('./maci')
-const { genMessage } = require('./client')
-const { poseidon } = require('circom')
+const fs = require("fs");
+const path = require("path");
+const { stringizing, genKeypair } = require("./keypair");
+const MACI = require("./maci");
+const { genMessage } = require("./client");
+const { poseidon } = require("circom");
 
-const outputPath = process.argv[2]
+const outputPath = process.argv[2];
 if (!outputPath) {
-  console.log('no output directory is specified')
-  process.exit(1)
+  console.log("no output directory is specified");
+  process.exit(1);
 }
 
-const USER_1 = 0        // state leaf idx
-const USER_2 = 1        // state leaf idx
+const USER_1 = 0; // state leaf idx
+const USER_2 = 1; // state leaf idx
 
 const privateKeys = [
   111111n, // coordinator
@@ -21,47 +21,61 @@ const privateKeys = [
   444444n, // share key for message 2
   555555n, // user 2
   666666n, // share key for message 3
-]
-const coordinator = genKeypair(privateKeys[0])
-const user1 = genKeypair(privateKeys[1])
-const user2 = genKeypair(privateKeys[4])
+];
+const coordinator = genKeypair(privateKeys[0]);
+const user1 = genKeypair(privateKeys[1]);
+const user2 = genKeypair(privateKeys[4]);
 
 const main = new MACI(
-  2, 1, 1, 5,               // tree config
-  privateKeys[0],         // coordinator
+  2,
+  1,
+  1,
+  5, // tree config
+  privateKeys[0], // coordinator
   5,
   2
-)
+);
 
-main.initStateTree(USER_1, user1.pubKey, 100)
-main.initStateTree(USER_2, user2.pubKey, 100)
+main.initStateTree(USER_1, user1.pubKey, 100);
+main.initStateTree(USER_2, user2.pubKey, 100);
 
-const enc1 = genKeypair(privateKeys[2])
+const enc1 = genKeypair(privateKeys[2]);
 
 const dmessage1 = genMessage(enc1.privKey, coordinator.pubKey)(
-  USER_1, 0, 0, 0, [0n, 0n], user1.privKey, 1234567890n
-)
-main.pushDeactivateMessage(dmessage1, enc1.pubKey)
-main.pushDeactivateMessage(dmessage1, enc1.pubKey)
+  USER_1,
+  0,
+  0,
+  0,
+  [0n, 0n],
+  user1.privKey,
+  1234567890n
+);
+main.pushDeactivateMessage(dmessage1, enc1.pubKey);
+main.pushDeactivateMessage(dmessage1, enc1.pubKey);
 
-
-const enc2 = genKeypair(privateKeys[3])
+const enc2 = genKeypair(privateKeys[3]);
 
 const dmessage2 = genMessage(enc2.privKey, coordinator.pubKey)(
-  4, 0, 0, 0, [0n, 0n], user2.privKey, 1234567890n
-)
-main.pushDeactivateMessage(dmessage2, enc2.pubKey)
+  4,
+  0,
+  0,
+  0,
+  [0n, 0n],
+  user2.privKey,
+  1234567890n
+);
+main.pushDeactivateMessage(dmessage2, enc2.pubKey);
 
-main.pushDeactivateMessage(dmessage1, enc1.pubKey)
+main.pushDeactivateMessage(dmessage1, enc1.pubKey);
 
-const { input, newDeactivate } = main.processDeactivateMessage(4, 2)
+const { input, newDeactivate } = main.processDeactivateMessage(4, 2);
 
-console.log(newDeactivate)
+console.log(newDeactivate);
 
 fs.writeFileSync(
-  path.join(outputPath, 'input.json'),
+  path.join(outputPath, "input.json"),
   JSON.stringify(stringizing(input), undefined, 2)
-)
+);
 
 // VOTE PROCESS
 

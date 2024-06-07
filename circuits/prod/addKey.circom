@@ -8,4 +8,4 @@ component main {
   public [
     inputHash
   ]
-} = AddNewKey(6);
+} = AddNewKey(2);
