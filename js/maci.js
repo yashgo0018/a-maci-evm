@@ -151,10 +151,14 @@ class MACI {
     );
     this.logs.push({
       type: "setStateLeaf",
-      data: stringizing([leafIdx, pubKey, balance]),
-      input: stringizing([pubKey, balance])
-        .map((input) => JSON.stringify(input))
-        .join(","),
+      data: stringizing({
+        leafIdx,
+        pubKey,
+        balance,
+      }),
+      // input: stringizing([pubKey, balance])
+      //   .map((input) => JSON.stringify(input))
+      //   .join(","),
     });
   }
 
@@ -187,6 +191,16 @@ class MACI {
         "",
       ].join("\n")
     );
+    this.logs.push({
+      type: "publishDeactivateMessage",
+      data: stringizing({
+        message: ciphertext,
+        encPubKey,
+      }),
+      // input: stringizing([[ciphertext], encPubKey])
+      //   .map((input) => JSON.stringify(input))
+      //   .join(","),
+    });
   }
 
   pushMessage(ciphertext, encPubKey) {
@@ -220,10 +234,13 @@ class MACI {
     );
     this.logs.push({
       type: "publishMessage",
-      data: stringizing(arguments),
-      input: stringizing([[ciphertext], encPubKey])
-        .map((input) => JSON.stringify(input))
-        .join(","),
+      data: stringizing({
+        message: ciphertext,
+        encPubKey,
+      }),
+      // input: stringizing([[ciphertext], encPubKey])
+      //   .map((input) => JSON.stringify(input))
+      //   .join(","),
     });
   }
 

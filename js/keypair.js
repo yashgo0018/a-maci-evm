@@ -45,7 +45,8 @@ const genRandomKey = () => {
     }
   }
 
-  const privKey = rand % SNARK_FIELD_SIZE;
+  // const privKey = rand % SNARK_FIELD_SIZE;
+  const privKey = rand % 2n ** 253n;
   return privKey;
 };
 
